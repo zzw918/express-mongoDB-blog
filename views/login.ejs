@@ -1,0 +1,15 @@
+<% include header %>
+  <div class="login">
+    <form action="/login"  method="post" role="form">
+      <div class="form-group">
+        <label for="name">用户名</label><br/>
+        <input class="form-control" type="text" name="name">
+      </div>
+      <div class="form-group">
+        <label for="password">密码</label><br/>
+        <input class="form-control" type="password" name="password">
+      </div>
+      <input class="btn btn-primary btn-large" type="submit" value="登录">
+    </form> 
+  </div>
+<% include footer %>

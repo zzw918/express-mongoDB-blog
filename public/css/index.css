@@ -1,0 +1,61 @@
+/* reset */
+* {
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  color: blue;
+  font-weight: bold;
+  text-decoration: none!important;
+}
+
+
+/* header */
+.nav {
+  margin-top: 50px;
+  font-size: 20px;
+}
+h2.title {
+  text-shadow: 0 0 5px green;
+}
+
+
+/* footer */
+div.footer {
+  height: 50px;
+  width: 100%;
+  line-height: 50px;
+  text-align: center;
+  background: black;
+  color: white;
+  visibility: hidden;
+}
+
+
+.fixed {
+  position: fixed;
+  bottom: 0;
+  visibility: visible!important;
+}
+
+
+
+/* register */
+div.register,
+div.login,
+div.post{
+  width: 25%;
+  margin: 30px auto;
+}
+div.register label,
+div.login label,
+div.post label {
+  color: green;
+}
+
+div.post {
+  width: 50%;
+}

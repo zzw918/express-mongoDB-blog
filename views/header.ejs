@@ -2,6 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>blog</title>
-</head>
+  <title><%=title%></title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+  </head>
 <body>
+<div class="container">
+  
+  <div class="nav text-right">
+    <a href="/post" title="发表文章" class="register-btn">发表文章</a>
+    <a href="/register" title="注册" class="register-btn">注册</a>
+    <a href="/login" title="登录" class="login-btn">登录</a>
+  </div>
+  <div class="logo text-center">
+    <a href="/"><img src="images/logo.jpg" alt="myblog"></a>
+    <!-- 使用了static中间件,直接读取public下的文件即可，否则无法正确获得public中的静态文件 
+    说明：ejs注释使用html的注释形式即可 -->
+
+  </div>
+
+  <h5 class="text-center"><%= success %></h5>
+  <h5 class="text-center"><%= error %></h5>
+
+</div>
