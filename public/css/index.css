@@ -21,6 +21,10 @@ a:hover {
 h2.title {
   text-shadow: 0 0 5px green;
 }
+div.tags {
+  display: inline-block;
+  float: left;
+}
 
 
 /* footer */
@@ -42,6 +46,22 @@ div.footer {
 }
 
 
+/* index */
+.post-wrap {
+  width: 80%;
+  margin: 0 auto;
+}
+.panel-heading {
+  position: relative;
+  font-size: 25px;
+}
+.panel-heading .time {
+  position: absolute;
+  right: 1.5%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+}
 
 /* register */
 div.register,

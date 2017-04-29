@@ -1,15 +1,41 @@
 var express = require("express");
 // 引入crypto是为了在保存用户密码的时候能够加密。使用md5的方式。
 var crypto = require("crypto");
-var User = require('../models/user');
+var User = require('../models/user'),
+    Post = require('../models/post');
+var checkLogin = require('../middlewares/check').checkLogin;
+var checkNotLogin = require('../middlewares/check').checkNotLogin;
 var router = express.Router();
 
 // 主页路由
 router.get('/', function (req, res) {
-  res.render('index', {
-    title: "主页",
-    user: req.session.user
+  // 判断是否是第一页， 把请求的页数转化为number类型
+  var page = parseInt(req.query.p) || 1;
+
+  // 查询并返回page页的十篇文章
+  Post.getTen(null, page, function (err, posts, total) {
+    if (err) {
+      // flash('error', err);
+      // 显然这里不能在flash了，flash伴随着重定向啊，本来就在首页了，还能定向到哪里去呢？？　
+      post = [];
+      console.log(err);
+    }
+    res.render('index', {
+      title: '主页',
+      posts: posts,
+      page: page,
+      isFirstPage: (page - 1) == 0,
+      isLastPage: ((page - 1) * 10 + posts.length) == total,
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString()
+    });
   });
+
+  // res.render('index', {
+  //   title: "主页",
+  //   user: req.session.user
+  // });
 });
 
 // get注册页路由
@@ -78,7 +104,8 @@ router.post('/register', function (req, res) {
 
 
 // get登录页路由
-router.get('/login', function (req, res) {
+// 使用middlewares中间件，当检测到已经登录了时候，就不允许再次登录了。
+router.get('/login', checkNotLogin, function (req, res) {
   res.render('login', {
     title: "登录",
     user: req.session.user
@@ -86,7 +113,7 @@ router.get('/login', function (req, res) {
 });
 
 // post登录页路由
-router.post('/login', function (req, res) {
+router.post('/login', checkNotLogin, function (req, res) {
   var name = req.body.name;
   var md5 = crypto.createHash("md5");
   var password = md5.update(req.body.password).digest('hex');
@@ -112,11 +139,35 @@ router.post('/login', function (req, res) {
 });
 
 // get 发表路由
-router.get('/post', function (req, res) {
+// 这里使用 middlewares 中间件下的check.js， 如果检测到没有登录，就redirect到登录页面。
+router.get('/post', checkLogin, function (req, res) {
   res.render('post', {
     title: "发表文章"
   });
 })
 
+router.post('/post', checkLogin, function (req, res) {
+  var curUser = req.session.user,
+      tags = [req.body.tag1,req.body.tag2,req.body.tag3],
+      post = new Post(curUser.name, curUser.head, req.body.title, tags, req.body.post);
+  post.save(function (err) {
+    if (err) {
+      req.flash('error', err);
+      console.log("文章成功失败");
+      return res.redirect('/post');
+    }
+    console.log("文章成功存储");
+    res.redirect('/');
+  });
+});
+
+
+// get 登出路由
+router.get('/logout', function (req, res) {
+  req.session.user = null;
+  res.redirect('/');
+});
 
 module.exports = router;
+
+
