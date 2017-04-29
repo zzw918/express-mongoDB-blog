@@ -7,6 +7,8 @@ var checkLogin = require('../middlewares/check').checkLogin;
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 var router = express.Router();
 
+module.exports = router;
+
 // 主页路由
 router.get('/', function (req, res) {
   // 判断是否是第一页， 把请求的页数转化为number类型
@@ -168,6 +170,37 @@ router.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
-module.exports = router;
 
 
+// 用户页路由
+// 其中 :name 的作用是： 占位符
+router.get('/u/:name', function (req, res) {
+  var page = parseInt(req.query.p) || 1;
+  
+  // 检查用户是否存在, 通过req.params.name获取占位符的内容
+  User.get(req.params.name, function (err, user) {
+    if (!user) {
+      req.flash('error', '用户不存在');
+      console.log('用户不存在');
+      return res.redirect('/');
+    }
+
+    // 查询并返回该用户的第 page 页的10篇文章
+    Post.getTen(user.name, page, function (err, posts, total) {
+        if (err) {
+          req.flash('error', err);
+          return res.redirect('/');
+        }
+        res.render('user', {
+          title: user.name,
+          posts: posts,
+          page: page,
+          isFirstPage: (page - 1) === 0,
+          isLastPage: ((page - 1) * 10 + posts.length) === total,
+          user: req.session.user,
+          success: req.flash('success').toString(),
+          error: req.flash('error').toString()
+        });
+    });
+  });
+});

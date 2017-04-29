@@ -79,3 +79,9 @@ div.post label {
 div.post {
   width: 50%;
 }
+
+
+/* user */
+.user-title {
+  text-shadow: 0 0 2px blue;
+}

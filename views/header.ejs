@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title><%=title%></title>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <!-- 引用静态文件的时候一定要使用 / 表示绝对路径，否则在使用用户页 /u 的时候会出现问题 -->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.css">
   </head>
 <body>
 <div class="container">
@@ -17,7 +18,7 @@
     <a href="/logout" title="登出" class="login-btn">登出</a>
   </div>
   <div class="logo text-center">
-    <a href="/"><img src="images/logo.jpg" alt="myblog"></a>
+    <a href="/"><img src="/images/logo.jpg" alt="myblog"></a>
     <!-- 使用了static中间件,直接读取public下的文件即可，否则无法正确获得public中的静态文件 
     说明：ejs注释使用html的注释形式即可 -->
 
