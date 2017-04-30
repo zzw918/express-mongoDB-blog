@@ -1,13 +1,15 @@
 <% for (var i = 0; i < posts.length; i++)  {%>
 <div class="panel panel-info post-wrap">
   <div class="panel-heading">
-    <%= posts[i].title %>
+    <a href=<%= '/u/' + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %> class='title-link'><%= posts[i].title %></a>
     <span class="time"><%= posts[i].time.minute %></span>
     </div>
   <p class="panel-body"><%= posts[i].post.substr(0, 300) + "..." %></p>
 
   <div class="panel-footer text-right">
-    <%= posts[i].name %>
+    <a href=<%= "/edit/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>编辑</a>
+    <a class="delete-link" href=<%= "/remove/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>删除</a>
+    <a href=<%= "/u/" + posts[i].name %>><%= posts[i].name %></a>
     <div class="tags">
       <% for (var j = 0; j < posts[i].tags.length; j++) { %>
         <span><%= posts[i].tags[j] %></span>

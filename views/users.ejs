@@ -1,0 +1,16 @@
+<% include header %>
+  <!-- 使用了一个数组去重，即只显示不重复的且有文章的人，没有文章的人不显示 -->
+  <% var obj = {}; %>
+  <% users.forEach(function (user) { %>
+  <% if (!obj[user.name]) { %>
+
+  <!-- 处理每一条数据 -->
+    <div class="single-user panel">
+      <p class="panel-heading text-center"><a href=<%= "/u/" + user.name + "/" %>><%=user.name %></a></p>
+    </div>
+  
+
+    <% obj[user.name] = 1; %>
+  <% } %> 
+  <% }) %>
+<% include footer %>

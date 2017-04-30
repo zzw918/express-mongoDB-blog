@@ -47,8 +47,11 @@ div.footer {
 
 
 /* index */
+.panel {
+  margin-top: 50px!important;
+}
 .post-wrap {
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
 }
 .panel-heading {
@@ -61,6 +64,17 @@ div.footer {
   top: 50%;
   transform: translateY(-50%);
   font-size: 15px;
+}
+
+.title-link:hover {
+  color: green;
+  font-weight: normal;
+  margin-left: 20px;
+  transition: margin-left 1s;
+}
+
+.delete-link:hover {
+  color: red;
 }
 
 /* register */
@@ -84,4 +98,17 @@ div.post {
 /* user */
 .user-title {
   text-shadow: 0 0 2px blue;
+}
+
+
+/* artile */
+div.article {
+  width: 70%;
+  margin: 0 auto;
+}
+
+/* users */
+.single-user {
+  width: 70%;
+  margin: 0 auto;
 }

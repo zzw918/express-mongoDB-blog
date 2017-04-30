@@ -94,7 +94,6 @@ router.post('/register', function (req, res) {
       // 下面是非常关键的一步：
       // 显然 session 只会在这个session期间存在，并没有存入数据库
       req.session.user = newUser;
-      console.log(req.session.user);
       req.flash('success', "注册成功！");
       res.redirect('/');
     });
@@ -134,7 +133,6 @@ router.post('/login', checkNotLogin, function (req, res) {
       return res.redirect('/register');
     }
     req.session.user = user;
-    console.log(req.session.user);
     req.flash('success', '登录成功！');
     res.redirect('/');
   });
@@ -202,5 +200,88 @@ router.get('/u/:name', function (req, res) {
           error: req.flash('error').toString()
         });
     });
+  });
+});
+
+
+
+// 文章页
+router.get('/u/:name/:day/:title', function (req, res) {
+  Post.getOne(req.params.name, req.params.day, req.params.title, function (err, post) {
+    if (err) {
+      req.flash('error', err);
+      return res.redirect('/');
+    }
+    res.render('article', {
+      title: req.params.title,
+      post: post,
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString()  
+    });
+  });
+});
+
+
+// 编辑页路由get
+router.get('/edit/:name/:day/:title', checkLogin,function (req, res) {
+  Post.getOne(req.params.name, req.params.day, req.params.title, function (err, post) {
+    if (err) {
+      req.flash('error', err);
+      console.log("出错");
+      return res.redirect('/');
+    }
+    res.render('edit', {
+      title: "编辑",
+      post: post,
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString()  
+    });
+  });
+});
+
+
+// 编辑页路由post
+// 为什么不能提交呢？
+router.post('/edit/:name/:day/:title', checkLogin ,function (req, res) {
+  Post.modify(req.params.name, req.params.day, req.params.title, req.body.post, function (err) {
+    var url = encodeURI('/u/' + req.params.name + '/' + req.params.day + '/' + req.params.title);
+    if (err) {
+      req.flash('error', err);
+      console.log("编辑失败");
+      return res.redirect('/');
+    } else {
+      req.flash('success', "修改成功！");
+      console.log("给句话啊哥们");
+      res.redirect(url);
+    }
+  });
+});
+
+
+// 查询所有的用户
+router.get('/users', function (req, res) {
+  Post.getAllUsers(function (err, users) {
+    if (err) {
+      req.flash('error', err);
+      return res.redirect('/');
+    } 
+    res.render('users', {
+      title: "所有用户",
+      users: users
+    });
+  });
+});
+
+
+// 删除路由
+router.get('/remove/:name/:day/:title', checkLogin,function (req, res) {
+  Post.remove(req.params.name, req.params.day, req.params.title, function (err) {
+    if (err) {
+      req.flash('error', err);
+      return res.redirect('/');
+    }
+    res.redirect('/');
   });
 });

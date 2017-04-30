@@ -16,4 +16,15 @@ window.onload = function () {
       document.querySelector(".footer").style.visibility = "visible";
     }
   }())
+
+  // 用户删除文章确认 
+  (function () {
+    var deleteLink = document.querySelector('.delete-link');
+    deleteLink.onclick = function (e) {
+      var assureDel = window.confirm("确定删除吗？"); 
+      if (!assureDel) { 
+        e.preventDefault();
+      }
+    }
+  }())
 }

@@ -52,7 +52,6 @@ Post.prototype.save = function (callback) {
     db.collection('posts', function (err, collection) {
       if (err) {
         // req.flash('error', err);
-        // 这不是胡写吗！  这里哪有什么req呢？ 这里是为了将错误传递给回调函数，供router中使用
         mongodb.close();
         return callback(err);
       }
@@ -105,6 +104,130 @@ Post.getTen = function (name, page, callback) {
           // 可以获取到文档
           // console.log(docs[2].post);
         });
+      });
+    });
+  });
+};
+
+Post.getOne = function (name, day, title, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err.toString());
+    }
+    db.collection('posts', function (err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err.toString());
+      }
+      collection.findOne({
+        "name": name,
+        "time.day": day,
+        "title": title
+      },function (err, doc) {
+        if (err) {
+          mongodb.close();
+          return callback(err.toString());
+        }
+        if (doc) {
+          collection.update({
+            "name": name,
+            "time.day": day,
+            "title": title
+          }, {
+            $inc: {
+              "pv": 1
+            }
+          }, function (err) {
+            mongodb.close();
+            if (err) {
+              return callback(err.toString());
+            }
+          });
+          callback(null, doc);
+        }
+      });
+    });
+
+  });
+
+}
+
+Post.modify = function (name, day, title, post, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      console.log("打开数据库失败！");
+      return callback(err.toString());
+    }
+    db.collection('posts', function (err, collection) {
+      if (err) {
+        console.log("打开posts失败！");
+        mongodb.close();
+        return callback(err.toString());
+      }
+      collection.update({
+        "name": name,
+        "time.day": day,
+        "title": title
+      }, {
+        $set: {
+          post: post
+        }
+      }, function (err) {
+        mongodb.close();
+        if (err) {
+          console.log("最终失败！");
+          return callback(err.toString());
+        }
+        callback(null);
+      });
+    });
+  });
+}
+
+Post.getAllUsers = function (callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('posts', function (err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      // 这里查询所有的用户，所以第一个参数不传递即可， sort可以按照时间分类，然后将查询到的转化为数组输出
+      collection.find({}).sort({time: -1}).toArray(function (err, users) {
+        mongodb.close();
+        if (err) {
+          return callback(err);
+        }
+        callback(null, users);
+      });
+    });
+  });
+}
+
+// 删除文章路由
+// 整个操作过程非常的清晰。
+Post.remove = function (name, day, title, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('posts', function (err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err);
+      }
+      collection.deleteOne({
+        "name": name,
+        "time.day": day,
+        "title": title
+      }, function (err) {
+        mongodb.close();
+        if (err) {
+          return callback(err);
+        }
+        callback(null);
       });
     });
   });
