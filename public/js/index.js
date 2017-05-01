@@ -10,12 +10,13 @@ window.onload = function () {
     }
     var footerHeight = document.getElementsByClassName("footer")[0].clientHeight,
         screenHeight = document.documentElement.clientHeight;
-    if ((allHeight + footerHeight) < screenHeight) {
+    if ((allHeight + footerHeight) < screenHeight - 15) {
       document.querySelector(".footer").className += " fixed";
     } else {
       document.querySelector(".footer").style.visibility = "visible";
       document.querySelector(".footer").className = "footer";
     }
+    console.log(allHeight+footerHeight, screenHeight);
   }());
 
   (function () {

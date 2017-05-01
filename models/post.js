@@ -40,7 +40,7 @@ Post.prototype.save = function (callback) {
     tags: this.tags,
     // post就是指用户输入的content
     post: this.post,
-    comment: [],
+    comments: [],
     pv: 0
   };
 
@@ -227,6 +227,38 @@ Post.remove = function (name, day, title, callback) {
         if (err) {
           return callback(err);
         }
+        callback(null);
+      });
+    });
+  });
+}
+
+
+// 添加评论
+Post.addComment = function (name, day, title, comment, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err.toString());
+    }
+    db.collection('posts', function (err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err.toString());
+      }
+      collection.update({
+        "name": name,
+        "day.time": day,
+        "title": title 
+      }, {
+        '$push': {
+          "comments": comment
+        }
+      }, function (err) {
+        mongodb.close();
+        if (err) {
+          return callback(err.toString());
+        }
+        console.log("没有问题");
         callback(null);
       });
     });

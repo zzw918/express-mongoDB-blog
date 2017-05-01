@@ -7,6 +7,10 @@ var checkLogin = require('../middlewares/check').checkLogin;
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 var router = express.Router();
 
+// 引入moulter中间件，用于上传用户头像文件
+// var multer = require('multer');
+// var uploat = multer({dest: './pubic/imgages/'});
+
 module.exports = router;
 
 // 主页路由
@@ -284,6 +288,24 @@ router.get('/remove/:name/:day/:title', checkLogin,function (req, res) {
       req.flash('error', err);
       return res.redirect('/');
     }
+    res.redirect('/');
+  });
+});
+
+
+
+// 添加评论路由
+// 用户也可以是没有登陆的，那么评论时就需要添加额外的信息
+//action=<%= "/comment/" + post.name + "/" + post.time.day + "/" + post.title %>>
+router.post('/comment/:name/:day/:title', function (req, res) {
+  Post.addComment(req.params.name, req.params.day, req.params.title, req.body.myComment, function (err) {
+    if (err) {
+      req.flash('error', err);
+      console.log("出错");
+      return res.redirect('/');
+
+    }
+    console.log("成功");
     res.redirect('/');
   });
 });
