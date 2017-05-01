@@ -1,16 +1,31 @@
 <% include header %>
   <div class="article">
     <div class="panel panel-primary">
-      <div class="panel-heading"><%= title %></div>
+      <div class="panel-heading article-title">
+        <%= title %>
+        <div class="article-info">
+          <span class="time">posted @ <%= post.time.minute %></span>
+          <a class="article-title-name" href=<%= "/u/" + post.name %>><%= post.name %></a>
+        </div>
+      </div>
       <p class="panel-body"><%= post.post %></p>
       <div class="panel-footer text-right">
-        <a href=<%= "/edit/" + post.name + "/" + post.time.day + "/" + post.title %>>编辑</a>
         <a class="delete-link" id="deleteLink" href=<%= "/remove/" + post.name + "/" + post.time.day + "/" + post.title %>>删除</a>
+        <a href=<%= "/edit/" + post.name + "/" + post.time.day + "/" + post.title %>>编辑</a>
+        <a href=<%= "/collect/" + post.name + "/" + post.time.day + "/" + post.title %>>收藏</a>
+        <a href=<%= "/recommend/" + post.name + "/" + post.time.day + "/" + post.title %> title="我要赞">赞(<%= post.recommends %>)</a>
+        <a href=<%= "/notRecommend/" + post.name + "/" + post.time.day + "/" + post.title %> title="我要踩" >踩(<%= post.notRecommends %>)</a>
+        <span class="pv">阅读(<%= post.pv %>)</span>
       </div>
     </div>
     <div class="comment panel panel-default">
         <div class="panel-heading comment-title">全部评论</div>
-        <form class="comment-form" method="post" role="form" action=<%= "/comment/" + post.name + "/" + post.time.day + "/" + post.title %>>
+        <% for (var i = 0; i < post.comments.length; i++) { %>
+            <div class="panel-body">
+              <p><%= post.comments[i] %></p>
+            </div>
+        <% } %>
+        <form class="comment-form" method="post" role="form" action=<%= "/u/" + post.name + "/" + post.time.day + "/" + post.title %>>
           <div class="form-group">
             <label for="myComment">
             <h4 class="comment-label">我的评论</h4>

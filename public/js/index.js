@@ -10,7 +10,9 @@ window.onload = function () {
     }
     var footerHeight = document.getElementsByClassName("footer")[0].clientHeight,
         screenHeight = document.documentElement.clientHeight;
-    if ((allHeight + footerHeight) < screenHeight - 15) {
+
+    // FIXME: 这里有问题，目前还不知原因
+    if ((allHeight + footerHeight) < screenHeight - 35) {
       document.querySelector(".footer").className += " fixed";
     } else {
       document.querySelector(".footer").style.visibility = "visible";

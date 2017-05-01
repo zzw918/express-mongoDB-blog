@@ -1,6 +1,6 @@
 <% include header %>
   <div class="post">
-    <form action=<%= "/edit/" + post.name + "/" + post.day + "/" + post.title %> method="post" role="form">
+    <form action=<%= "/edit/" + post.name + "/" + post.time.day + "/" + post.title %> method="post" role="form">
       <div class="form-group">
         <label for="title">标题</label>
         <input type="text" name="title" class="form-control" value=<%= post.title %>>

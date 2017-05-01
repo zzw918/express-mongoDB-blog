@@ -212,6 +212,7 @@ router.get('/u/:name', function (req, res) {
 
 // 文章页
 router.get('/u/:name/:day/:title', function (req, res) {
+  // 注意这里的post是什么！
   Post.getOne(req.params.name, req.params.day, req.params.title, function (err, post) {
     if (err) {
       req.flash('error', err);
@@ -227,6 +228,23 @@ router.get('/u/:name/:day/:title', function (req, res) {
   });
 });
 
+
+
+// 添加评论路由
+// 用户也可以是没有登陆的，那么评论时就需要添加额外的信息
+//action=<%= "/comment/" + post.name + "/" + post.time.day + "/" + post.title %>>
+router.post('/u/:name/:day/:title', function (req, res) {
+  var url = encodeURI("/u/" + req.params.name + "/" + req.params.day + "/" + req.params.title);
+  Post.addComment(req.params.name, req.params.day, req.params.title, req.body.myComment, function (err) {
+    if (err) {
+      req.flash('error', err);
+      console.log("出错");
+      return res.redirect('/');
+    }
+    console.log("成功");
+    res.redirect(url);
+  });
+});
 
 // 编辑页路由get
 router.get('/edit/:name/:day/:title', checkLogin,function (req, res) {
@@ -250,15 +268,13 @@ router.get('/edit/:name/:day/:title', checkLogin,function (req, res) {
 // 编辑页路由post
 router.post('/edit/:name/:day/:title', checkLogin ,function (req, res) {
   Post.modify(req.params.name, req.params.day, req.params.title, req.body.post, function (err) {
-    var url = encodeURI('/u/' + req.params.name + '/' + req.params.day + '/' + req.params.title);
+    var url = encodeURI("/u/" + req.params.name + "/" + req.params.day + "/" + req.params.title);
     if (err) {
       req.flash('error', err);
       console.log("编辑失败");
       return res.redirect('/');
     } else {
-      // req.flash('  ', "修改成功！");
-      console.log("给句话啊哥们");
-      res.redirect('/');
+      res.redirect(url);
     }
   });
 });
@@ -294,18 +310,26 @@ router.get('/remove/:name/:day/:title', checkLogin,function (req, res) {
 
 
 
-// 添加评论路由
-// 用户也可以是没有登陆的，那么评论时就需要添加额外的信息
-//action=<%= "/comment/" + post.name + "/" + post.time.day + "/" + post.title %>>
-router.post('/comment/:name/:day/:title', function (req, res) {
-  Post.addComment(req.params.name, req.params.day, req.params.title, req.body.myComment, function (err) {
+// 赞一个
+router.get('/recommend/:name/:day/:title',function (req, res) {
+  Post.recommend(req.params.name, req.params.day, req.params.title, function (err) {
+    var url = encodeURI("/u/" + req.params.name + "/" + req.params.day + "/" + req.params.title);
     if (err) {
       req.flash('error', err);
-      console.log("出错");
       return res.redirect('/');
-
     }
-    console.log("成功");
-    res.redirect('/');
+    res.redirect("/");
+  });
+});
+
+// 踩一个
+router.get('/notRecommend/:name/:day/:title',function (req, res) {
+  Post.notRecommend(req.params.name, req.params.day, req.params.title, function (err) {
+    var url = encodeURI("/u/" + req.params.name + "/" + req.params.day + "/" + req.params.title);
+    if (err) {
+      req.flash('error', err);
+      return res.redirect('/');
+    }
+    res.redirect("/");
   });
 });

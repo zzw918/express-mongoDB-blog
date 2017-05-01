@@ -10,16 +10,23 @@
 <% for (var i = 0; i < posts.length; i++)  {%>
 <div class="panel panel-info post-wrap">
   <div class="panel-heading">
+    <img src="/images/titlebg.jpg" alt="titlebg" class="titlebg">
     <a href=<%= '/u/' + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %> class='title-link'><%= posts[i].title %></a>
-    <span class="time"><%= posts[i].time.minute %></span>
+    <div class="post-info">
+      <span class="time">posted @ <%= posts[i].time.minute %></span>
+      <a class="author" href=<%= "/u/" + posts[i].name %>><%= posts[i].name %></a>
     </div>
-  <p class="panel-body"><%= posts[i].post.substr(0, 300) + "..." %></p>
+    </div>
+  <p class="panel-body"><%= posts[i].post.substr(0, 300) %>  <a class="read-more" href=<%= '/u/' + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>阅读全文</a></p>
 
   <div class="panel-footer text-right">
-    <a href=<%= "/edit/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>编辑</a>
     <a class="delete-link" id="deleteLink" href=<%= "/remove/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>删除</a>
-    <a href=<%= "/u/" + posts[i].name %>><%= posts[i].name %></a>
+    <a href=<%= "/edit/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>编辑</a>
+    <a href=<%= "/recommend/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %> title="我要赞">赞(<%= posts[i].recommends %>)</a>
+    <a href=<%= "/notRecommend/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %> title="我要踩">踩(<%= posts[i].notRecommends %>)</a>
+    <span class="pv">阅读(<%= posts[i].pv %>)</span>
     <div class="tags">
+      <img src="/images/tag.png" alt="">
       <% for (var j = 0; j < posts[i].tags.length; j++) { %>
         <span><%= posts[i].tags[j] %></span>
       <%} %>

@@ -41,8 +41,12 @@ Post.prototype.save = function (callback) {
     // post就是指用户输入的content
     post: this.post,
     comments: [],
-    pv: 0
+    pv: 0,
+    recommends: 0,
+    notRecommends: 0
   };
+  // 其中recommends是推荐数
+  // 其中pv存储的是阅读量
 
   mongodb.open(function (err, db) {
     if (err) {
@@ -164,22 +168,24 @@ Post.modify = function (name, day, title, post, callback) {
         mongodb.close();
         return callback(err.toString());
       }
+      // 当这里更新有问题时，我们可以现在cmd中试。 可用，可以再条件中去掉几个，然后逐渐尝试。
+      // 比如，我只是用title来修改，不用其他的。
+      // 但是，这里添加day为什么出错？
+      // 所以就可以去edit.ejs中找错误，事实证明，ejs出错！
       collection.update({
         "name": name,
-        "time.day": day,
-        "title": title
+        "title": title,
+        "time.day": day
       }, {
-        $set: {
-          "post": post
-        }
+        $set: {"post": post}
       }, function (err) {
         mongodb.close();
         if (err) {
           console.log("最终失败！");
           return callback(err.toString());
         }
-        callback(null);
       });
+      callback(null);
     });
   });
 }
@@ -247,12 +253,10 @@ Post.addComment = function (name, day, title, comment, callback) {
       }
       collection.update({
         "name": name,
-        "day.time": day,
-        "title": title 
+        "time.day": day,
+        "title": title
       }, {
-        '$push': {
-          "comments": comment
-        }
+        $push: {"comments": comment}
       }, function (err) {
         mongodb.close();
         if (err) {
@@ -260,6 +264,90 @@ Post.addComment = function (name, day, title, comment, callback) {
         }
         console.log("没有问题");
         callback(null);
+      });
+    });
+  });
+}
+
+
+
+
+// 推荐路由
+// 每个用户只能推荐一次
+Post.recommend = function (name, day, title, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err.toString());
+    }
+    db.collection('posts', function (err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err.toString());
+      }
+      collection.findOne({
+        "name": name,
+        "time.day": day,
+        "title": title      
+      }, function (err, doc) {
+          if ((doc.notRecommends >= 1) || (doc.recommends >= 1)) {
+            console.log("已经推荐了！");
+            mongodb.close();
+            callback(null);
+          } else {
+            collection.update({
+              "name": name,
+              "time.day": day,
+              "title": title
+            }, {
+              $inc: {recommends: 1}
+            }, function (err) {
+              mongodb.close();
+              if (err) {
+                return callback(err.toString());
+              }
+              callback(null);
+            });
+        }
+      });
+    });
+  });
+}
+
+// 踩路由
+// 每个用户只能不推荐一次
+Post.notRecommend = function (name, day, title, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err.toString());
+    }
+    db.collection('posts', function (err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err.toString());
+      }
+      collection.findOne({
+        "name": name,
+        "time.day": day,
+        "title": title      
+      }, function (err, doc) {
+          if ((doc.notRecommends >= 1) || (doc.recommends >= 1)) {
+            mongodb.close();
+            callback(null);
+          } else {
+            collection.update({
+              "name": name,
+              "time.day": day,
+              "title": title
+            }, {
+              $inc: {notRecommends: 1}
+            }, function (err) {
+              mongodb.close();
+              if (err) {
+                return callback(err.toString());
+              }
+              callback(null);
+            });
+        }
       });
     });
   });

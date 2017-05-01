@@ -67,12 +67,20 @@ div.footer {
   position: relative;
   font-size: 25px;
 }
-.panel-heading .time {
+.panel-heading .post-info {
   position: absolute;
-  right: 1.5%;
+  right: 1%;
   top: 50%;
   transform: translateY(-50%);
   font-size: 15px;
+}
+
+.panel-heading .author {
+  right: 1%;
+}
+
+span.pv {
+  color: #337ab7;
 }
 
 .title-link:hover {
@@ -89,6 +97,24 @@ div.footer {
 .no-article-img {
   border-radius: 50%;
   margin-top: 50px;
+}
+
+img.titlebg {
+  border-radius: 50%;
+}
+.article-title {
+  position: relative;
+}
+
+.article-info {
+  position: absolute;
+  top: 50%;
+  right: 1%;
+  transform: translateY(-50%);
+  font-size: 15px;
+}
+.article-title-name {
+  color: white;
 }
 
 /* register */
@@ -130,6 +156,11 @@ div.article {
 .comment-label {
   margin: 20px 0 5px 0px;
 }
+a.read-more,
+a.read-more:hover {
+  text-decoration: underline!important;
+}
+
 
 /* users */
 .single-user {
