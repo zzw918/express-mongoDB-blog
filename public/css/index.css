@@ -25,6 +25,15 @@ div.tags {
   display: inline-block;
   float: left;
 }
+.logo-img {
+  border-radius: 5px 5px 10px 10px;
+  box-shadow: 0 0 8px green;
+  margin-top: 20px;
+}
+.flash-message {
+  margin-top: 20px;
+  color: green;
+}
 
 
 /* footer */
@@ -51,7 +60,7 @@ div.footer {
   margin-top: 50px!important;
 }
 .post-wrap {
-  width: 70%;
+  width: 76%;
   margin: 0 auto;
 }
 .panel-heading {
@@ -75,6 +84,11 @@ div.footer {
 
 .delete-link:hover {
   color: red;
+}
+
+.no-article-img {
+  border-radius: 50%;
+  margin-top: 50px;
 }
 
 /* register */
@@ -103,12 +117,21 @@ div.post {
 
 /* artile */
 div.article {
-  width: 70%;
+  width: 76%;
   margin: 0 auto;
 }
 
 /* users */
 .single-user {
-  width: 70%;
+  width: 75%;
   margin: 0 auto;
+}
+
+
+/* 浮动 */
+.left {
+  float: left;
+}
+.right {
+  float: right;
 }

@@ -1,3 +1,12 @@
+<% if (posts.length === 0) { %>
+    <div class="no-article">
+      <h3 class="text-center">还没有文章，现在就<a href="/post">发表</a>？ </h3>
+      <div class="text-center">
+        <img  src="/images/no-article.jpg" class="no-article-img" alt="" width="400">
+      </div>
+    </div>
+<% } %>
+
 <% for (var i = 0; i < posts.length; i++)  {%>
 <div class="panel panel-info post-wrap">
   <div class="panel-heading">
@@ -8,7 +17,7 @@
 
   <div class="panel-footer text-right">
     <a href=<%= "/edit/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>编辑</a>
-    <a class="delete-link" href=<%= "/remove/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>删除</a>
+    <a class="delete-link" id="deleteLink" href=<%= "/remove/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>删除</a>
     <a href=<%= "/u/" + posts[i].name %>><%= posts[i].name %></a>
     <div class="tags">
       <% for (var j = 0; j < posts[i].tags.length; j++) { %>

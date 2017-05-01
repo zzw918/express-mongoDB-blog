@@ -125,12 +125,12 @@ router.post('/login', checkNotLogin, function (req, res) {
       return res.redirect('/login');
     }
     if (!user) {
-      req.flash('error', '用户未注册');
-      return res.redirect('/');
+      req.flash('error', '此用户未注册');
+      return res.redirect('back');
     }
     if (password !== user.password) {
       req.flash('error', "密码错误！");
-      return res.redirect('/register');
+      return res.redirect('back');
     }
     req.session.user = user;
     req.flash('success', '登录成功！');
@@ -142,7 +142,8 @@ router.post('/login', checkNotLogin, function (req, res) {
 // 这里使用 middlewares 中间件下的check.js， 如果检测到没有登录，就redirect到登录页面。
 router.get('/post', checkLogin, function (req, res) {
   res.render('post', {
-    title: "发表文章"
+    title: "发表文章",
+    user: req.session.user
   });
 })
 
@@ -243,7 +244,6 @@ router.get('/edit/:name/:day/:title', checkLogin,function (req, res) {
 
 
 // 编辑页路由post
-// 为什么不能提交呢？
 router.post('/edit/:name/:day/:title', checkLogin ,function (req, res) {
   Post.modify(req.params.name, req.params.day, req.params.title, req.body.post, function (err) {
     var url = encodeURI('/u/' + req.params.name + '/' + req.params.day + '/' + req.params.title);
@@ -252,16 +252,16 @@ router.post('/edit/:name/:day/:title', checkLogin ,function (req, res) {
       console.log("编辑失败");
       return res.redirect('/');
     } else {
-      req.flash('success', "修改成功！");
+      // req.flash('  ', "修改成功！");
       console.log("给句话啊哥们");
-      res.redirect(url);
+      res.redirect('/');
     }
   });
 });
 
 
 // 查询所有的用户
-router.get('/users', function (req, res) {
+router.get('/users', checkLogin,function (req, res) {
   Post.getAllUsers(function (err, users) {
     if (err) {
       req.flash('error', err);
@@ -269,8 +269,10 @@ router.get('/users', function (req, res) {
     } 
     res.render('users', {
       title: "所有用户",
-      users: users
+      users: users,
+      user: req.session.user
     });
+    // 注意： 其中的user: req.session.user 是在每一个页面中都要使用的，因为这样才可以记住用户的状态。
   });
 });
 

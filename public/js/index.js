@@ -14,17 +14,19 @@ window.onload = function () {
       document.querySelector(".footer").className += " fixed";
     } else {
       document.querySelector(".footer").style.visibility = "visible";
+      document.querySelector(".footer").className = "footer";
     }
-  }())
+  }());
 
-  // 用户删除文章确认 
   (function () {
-    var deleteLink = document.querySelector('.delete-link');
-    deleteLink.onclick = function (e) {
-      var assureDel = window.confirm("确定删除吗？"); 
-      if (!assureDel) { 
-        e.preventDefault();
-      }
+    var contentWrap = document.getElementsByTagName("body")[0];
+    contentWrap.onclick = function (e) {
+        if (e.target.className === "delete-link") {
+            var assureDel = window.confirm("确定删除吗？"); 
+              if (!assureDel) { 
+                e.preventDefault();
+              }
+        }
     }
-  }())
+  }());
 }

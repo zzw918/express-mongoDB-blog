@@ -170,7 +170,7 @@ Post.modify = function (name, day, title, post, callback) {
         "title": title
       }, {
         $set: {
-          post: post
+          "post": post
         }
       }, function (err) {
         mongodb.close();
@@ -189,13 +189,13 @@ Post.getAllUsers = function (callback) {
     if (err) {
       return callback(err);
     }
-    db.collection('posts', function (err, collection) {
+    // 既然要查找所有的用户，当然要去users集合下寻找啊
+    db.collection('users', function (err, collection) {
       if (err) {
         mongodb.close();
         return callback(err);
       }
-      // 这里查询所有的用户，所以第一个参数不传递即可， sort可以按照时间分类，然后将查询到的转化为数组输出
-      collection.find({}).sort({time: -1}).toArray(function (err, users) {
+      collection.find({}).toArray(function (err, users) {
         mongodb.close();
         if (err) {
           return callback(err);

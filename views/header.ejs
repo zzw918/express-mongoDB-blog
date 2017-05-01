@@ -10,23 +10,36 @@
   </head>
 <body>
 <div class="container">
-  
-  <div class="nav text-right">
-    <a href="/" title="首页" class="register-btn">首页</a>
-    <a href="/post" title="发表文章" class="register-btn">发表文章</a>
-    <a href="/users" title="所有用户" class="register-btn">所有用户</a>
-    <a href="/register" title="注册" class="register-btn">注册</a>
-    <a href="/login" title="登录" class="login-btn">登录</a>
-    <a href="/logout" title="登出" class="login-btn">登出</a>
-  </div>
+  <!-- 注意：这里判断user是否存在，而不能判断user.name是否存在，因为user是render进来的， 如果不存在，name就会报错，注意 -->
+  <% if (!!user) { %>
+    <div class="nav">
+      <div class="left">欢迎你，<a href=<%= "/u/" + user.name %>><%= user.name %></a></div>
+      <div class="right">
+        <a href="/" title="首页" class="register-btn">首页</a>
+        <a href="/post" title="发表文章" class="register-btn">发表文章</a>
+        <a href="/users" title="所有用户" class="register-btn">所有用户</a>
+        <a href="/logout" title="登出" class="login-btn">退出登录</a>
+      </div>
+    </div>
+  <% } else {%>
+    <div class="nav">
+      <div class="left">
+        <a href="/" title="首页" class="register-btn">首页</a>
+      </div>
+      <div class="right">
+        <a href="/login" title="登录" class="login-btn">登录</a>
+        <a href="/register" title="注册" class="register-btn">注册</a>
+      </div>
+    </div>
+  <% }%>
   <div class="logo text-center">
-    <a href="/"><img src="/images/logo.jpg" alt="myblog"></a>
+    <a href="/"><img src="/images/logo.jpg" alt="myblog" class="logo-img"></a>
     <!-- 使用了static中间件,直接读取public下的文件即可，否则无法正确获得public中的静态文件 
     说明：ejs注释使用html的注释形式即可 -->
 
   </div>
 
-  <h5 class="text-center"><%= success %></h5>
-  <h5 class="text-center"><%= error %></h5>
+  <h3 class="text-center flash-message"><%= success %></h3>
+  <h3 class="text-center flash-message"><%= error %></h3>
 
 </div>
