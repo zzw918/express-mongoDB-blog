@@ -37,11 +37,6 @@ router.get('/', function (req, res) {
       error: req.flash('error').toString()
     });
   });
-
-  // res.render('index', {
-  //   title: "主页",
-  //   user: req.session.user
-  // });
 });
 
 // get注册页路由
@@ -60,12 +55,6 @@ router.post('/register', function (req, res) {
     req.flash('error', "注册失败！");
     return res.redirect('/register');
   } 
-
-  // 之前犯了错误 --- 不能只验证了密码就说注册成功啊， 因为后面还要判断数据库中是否存在，然后反馈。 
-  /*else {
-    req.flash("success", "注册成功! 现在就登录吧~");
-    res.redirect('/login');
-  }*/
 
   // 用于加密用户的密码，然后再存储。 加密方式：md5
   // 创建一个用户
@@ -102,8 +91,6 @@ router.post('/register', function (req, res) {
       res.redirect('/');
     });
   });
-
-
 });
 
 
@@ -172,7 +159,6 @@ router.get('/logout', function (req, res) {
   req.session.user = null;
   res.redirect('/');
 });
-
 
 
 // 用户页路由
@@ -248,33 +234,47 @@ router.post('/u/:name/:day/:title', function (req, res) {
 
 // 编辑页路由get
 router.get('/edit/:name/:day/:title', checkLogin,function (req, res) {
-  Post.getOne(req.params.name, req.params.day, req.params.title, function (err, post) {
-    if (err) {
-      req.flash('error', err);
-      console.log("出错");
-      return res.redirect('/');
-    }
-    res.render('edit', {
-      title: "编辑",
-      post: post,
-      user: req.session.user,
-      success: req.flash('success').toString(),
-      error: req.flash('error').toString()  
+  if (req.session.user.name == req.params.name) {
+    Post.getOne(req.params.name, req.params.day, req.params.title, function (err, post) {
+      if (err) {
+        req.flash('error', err);
+        console.log("出错");
+        return res.redirect('/');
+      }
+      res.render('edit', {
+        title: "编辑",
+        post: post,
+        user: req.session.user,
+        success: req.flash('success').toString(),
+        error: req.flash('error').toString()  
+      });
     });
-  });
+  } else {
+    res.redirect('back');
+  }
 });
 
 
 // 编辑页路由post
 router.post('/edit/:name/:day/:title', checkLogin ,function (req, res) {
-  Post.modify(req.params.name, req.params.day, req.params.title, req.body.post, function (err) {
+  var editedPost = {
+    name: req.params.name,
+    day: req.params.day,
+    title: req.params.title,
+    post: req.body.post,
+    tag1: req.body.tag1||"",
+    tag2: req.body.tag2||"",
+    tag3: req.body.tag3||""
+  };
+  Post.modify(editedPost, function (err) {
+  // Post.modify(req.params.name, req.params.day, req.params.title,req.body.post, function (err) {
     var url = encodeURI("/u/" + req.params.name + "/" + req.params.day + "/" + req.params.title);
     if (err) {
       req.flash('error', err);
       console.log("编辑失败");
       return res.redirect('/');
     } else {
-      res.redirect(url);
+      res.redirect("/");
     }
   });
 });

@@ -156,7 +156,8 @@ Post.getOne = function (name, day, title, callback) {
 
 }
 
-Post.modify = function (name, day, title, post, callback) {
+Post.modify = function (editedPost, callback) {
+// Post.modify = function (name, day, title,post, callback) {
   mongodb.open(function (err, db) {
     if (err) {
       console.log("打开数据库失败！");
@@ -172,20 +173,40 @@ Post.modify = function (name, day, title, post, callback) {
       // 比如，我只是用title来修改，不用其他的。
       // 但是，这里添加day为什么出错？
       // 所以就可以去edit.ejs中找错误，事实证明，ejs出错！
+      // 下面新添加了修改标签的方法： 删除所有的已有标签，全部替换为最新的标签，使用set和unset方法实现。
       collection.update({
-        "name": name,
-        "title": title,
-        "time.day": day
+        "name": editedPost.name,
+        "title": editedPost.title,
+        "time.day": editedPost.day
       }, {
-        $set: {"post": post}
+        $set: {
+          post: editedPost.post
+        },
+        $unset: {
+          "tags": 1
+        }
       }, function (err) {
-        mongodb.close();
         if (err) {
           console.log("最终失败！");
+          mongodb.close();
           return callback(err.toString());
         }
+        collection.update({
+          "name": editedPost.name,
+          "title": editedPost.title,
+          "time.day": editedPost.day
+        }, {
+          $set: {
+            "tags": [editedPost.tag1, editedPost.tag2, editedPost.tag3]
+          }
+        }, function (err) {
+          mongodb.close();
+          if (err) {
+            return callback(err.toString());
+          } 
+          callback(null);
+        });
       });
-      callback(null);
     });
   });
 }

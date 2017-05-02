@@ -30,14 +30,14 @@ app.use(session({
   key: settings.db, //cookie
   cookie: {maxAge: 1000 * 60 * 60 * 24 * 30}, // 30天
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+   store: new MongoStore({
+      // db: settings.db,
+      host: settings.host,
+      port: settings.port,
+      url: 'mongodb://localhost/blog'
+    })
 }));
- // store: new MongoStore({
- //    // db: settings.db,
- //    host: settings.host,
- //    port: settings.port,
- //    url: 'mongodb://localhost/blog'
- //  })
 app.use(flash());
 // set flash 这样就可以在ejs中使用了
 app.use(function (req, res, next) {
