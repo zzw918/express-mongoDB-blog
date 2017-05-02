@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var route = require('./routes/index.js');
 // 注意：express-session是处理session的模块，而connect-flah是通知消息的模块，且必须依赖于epress-session,单独引入connect-flash是没有用的。
 var session = require("express-session");
+// session连接数据库， 这样才能在服务器端使用，否则不稳定。
 var MongoStore = require("connect-mongo")(session);
 var flash = require("connect-flash");
 
@@ -31,6 +32,7 @@ app.use(session({
   cookie: {maxAge: 1000 * 60 * 60 * 24 * 30}, // 30天
   resave: false,
   saveUninitialized: true,
+  // 为什么使用了下面的方式之后，session就稳定多了？
    store: new MongoStore({
       // db: settings.db,
       host: settings.host,

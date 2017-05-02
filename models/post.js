@@ -5,12 +5,13 @@
 var mongodb = require('./db'),
     markdown = require('markdown').markdown;
 
-function Post(name, head, title, tags, post) {
+function Post(name, head, title, tags, post, ifIndex) {
   this.name = name;
   this.head = head;
   this.title = title;
   this.tags = tags;
   this.post = post;
+  this.ifIndex = ifIndex;
 }
 
 module.exports = Post;
@@ -25,7 +26,7 @@ Post.prototype.save = function (callback) {
     year: date.getFullYear(),
     month: date.getFullYear() + "-" + (date.getMonth() + 1),
     day: date.getFullYear() + "-" + (date.getMonth() + 1) + '-' + date.getDate(),
-    minute: date.getFullYear() + "-" + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()
+    minute: date.getFullYear() + "-" + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ":" + ((date.getMinutes() < 10)? ("0"+date.getMinutes()):(date.getMinutes()))
   };
   
   // 要存入数据库的文档 --- 可以看到在存储用户信息和这个是一样的，都需要经历这一步，因为创建实例是在controller哪里做的，
@@ -41,6 +42,8 @@ Post.prototype.save = function (callback) {
     // post就是指用户输入的content
     post: this.post,
     comments: [],
+    // 如果没选中发送到首页，ifIndex值为undefined，那么就设置为off
+    ifIndex: this.ifIndex || "off",
     pv: 0,
     recommends: 0,
     notRecommends: 0
@@ -75,7 +78,46 @@ Post.prototype.save = function (callback) {
 
 }
 
-Post.getTen = function (name, page, callback) {
+// 获取首页的10篇文章
+Post.getTenIndex = function (name, page, callback) {
+  mongodb.open(function (err, db) {
+    if (err) {
+      return callback(err.toString());
+    }
+    db.collection('posts', function (err, collection) {
+      if (err) {
+        mongodb.close();
+        return callback(err.toString());
+      }
+      collection.count({ifIndex: "on"}, function (err, total) {
+            if (err) {
+              mongodb.close();
+              return callback(err.toString());
+            }
+            collection.find({
+              name: "朱振伟"
+            }, {
+              skip: (page - 1) * 10,
+              limit: 10
+            }).sort({
+              time: -1
+            }).toArray(function (err, docs) {
+              mongodb.close();
+              if (err) {
+                callback(err.toString());
+              }
+              // 显然，这里传出去的是docs，这样才能从回掉函数中获取到docs
+              callback(null, docs, total);
+              // 可以获取到文档
+              // console.log(docs[2].post);
+            });
+      });
+    });
+  });
+};
+
+// 获取用户页的10篇文章
+Post.getTenIndex = function (name, page, callback) {
   mongodb.open(function (err, db) {
     if (err) {
       return callback(err.toString());

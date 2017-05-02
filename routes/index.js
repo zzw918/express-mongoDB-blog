@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
   var page = parseInt(req.query.p) || 1;
 
   // 查询并返回page页的十篇文章
-  Post.getTen(null, page, function (err, posts, total) {
+  Post.getTenIndex(null, page, function (err, posts, total) {
     if (err) {
       // flash('error', err);
       // 显然这里不能在flash了，flash伴随着重定向啊，本来就在首页了，还能定向到哪里去呢？？　
@@ -139,9 +139,12 @@ router.get('/post', checkLogin, function (req, res) {
 })
 
 router.post('/post', checkLogin, function (req, res) {
+  var ifIndex = req.body.ifIndex;
+  // 如果复选框选中，那么ifIndex值为on，否则ifindex值为undefined 
+  console.log(ifIndex);
   var curUser = req.session.user,
       tags = [req.body.tag1,req.body.tag2,req.body.tag3],
-      post = new Post(curUser.name, curUser.head, req.body.title, tags, req.body.post);
+      post = new Post(curUser.name, curUser.head, req.body.title, tags, req.body.post, ifIndex);
   post.save(function (err) {
     if (err) {
       req.flash('error', err);
