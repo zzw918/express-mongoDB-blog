@@ -196,9 +196,7 @@ Post.getOne = function (name, day, title, callback) {
         }
       });
     });
-
   });
-
 }
 
 Post.modify = function (editedPost, callback) {

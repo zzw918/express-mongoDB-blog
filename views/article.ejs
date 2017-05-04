@@ -15,6 +15,7 @@
         <a href=<%= "/collect/" + post.name + "/" + post.time.day + "/" + post.title %>>收藏</a>
         <a href=<%= "/recommend/" + post.name + "/" + post.time.day + "/" + post.title %> title="我要赞">赞(<%= post.recommends %>)</a>
         <a href=<%= "/notRecommend/" + post.name + "/" + post.time.day + "/" + post.title %> title="我要踩" >踩(<%= post.notRecommends %>)</a>
+        <span class="com">评论(<%= post.comments.length %>)</span>
         <span class="pv">阅读(<%= post.pv %>)</span>
       </div>
     </div>

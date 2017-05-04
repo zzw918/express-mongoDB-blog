@@ -24,6 +24,7 @@
     <a href=<%= "/edit/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %>>编辑</a>
     <a href=<%= "/recommend/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %> title="我要赞">赞(<%= posts[i].recommends %>)</a>
     <a href=<%= "/notRecommend/" + posts[i].name + "/" + posts[i].time.day + "/" + posts[i].title %> title="我要踩">踩(<%= posts[i].notRecommends %>)</a>
+    <span class="com">评论(<%= posts[i].comments.length %>)</span>
     <span class="pv">阅读(<%= posts[i].pv %>)</span>
     <div class="tags">
       <img src="/images/tag.png" alt="">

@@ -3,7 +3,8 @@ var express = require("express");
 var crypto = require("crypto");
 var User = require('../models/user'),
     Post = require('../models/post'),
-    Comment = require('../models/comment');
+    Comment = require('../models/comment'),
+    Collect = require('../models/collection');
 var checkLogin = require('../middlewares/check').checkLogin;
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 var router = express.Router();
@@ -346,3 +347,19 @@ router.get('/notRecommend/:name/:day/:title',function (req, res) {
 
 // 收藏路由需要重新建立一个数据库集合， 每次点击收藏，即把该文章的原本的所有信息和收藏该文章的的人存储为一个一个的文档，
 // 然后到点击我的收藏的时候，就从中像取posts一样来取得文章
+router.get('/collect/:name/:day/:title', function (req, res) {
+  Post.getOne(req.params.name, req.params.day, req.params.title, function (err, onePost) {
+    if (err) {
+      req.flash('error', err.toString());
+      return res.redirect('/');
+    }
+    var newCollect = new Collect(onePost, req.session.user.name);
+    newCollect.save(function (err) {
+      if (err) {
+        req.flash('error', err.toString());
+        return res.redirect('/');
+      }
+    });
+    res.redirect('/');
+  });
+});

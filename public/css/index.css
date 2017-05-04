@@ -89,9 +89,11 @@ div.footer {
   right: 1%;
 }
 
-span.pv {
+span.pv,
+span.com {
   color: #337ab7;
 }
+
 
 .title-link:hover {
   color: green;
