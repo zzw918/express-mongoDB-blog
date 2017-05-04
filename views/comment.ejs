@@ -1,0 +1,40 @@
+<div class="comment panel panel-default">
+    <% if (post.comments.length == 0) { %>
+      <h4 class="text-left" style="margin-left: 10px;">还没有评论~ 评论一下吧~</h4>
+    <% } else { %>
+      <h4 class="text-left" style="margin-left: 10px;">全部评论</h4>
+    <% } %> 
+    <div class="all-comments">
+      <% for (var i = 0; i < post.comments.length; i++) {%>
+        <div class="panel comment-item panel-default">
+          <div class="panel-heading"><%= post.comments[i].name %> 说：</div>
+          <p class="panel-body"><%= post.comments[i].content %></p>
+          <p class="comment-footer"><%= post.comments[i].time %></p>
+        </div>
+      <% } %>
+    </div>
+    <form class="comment-form" method="post" role="form" action=<%= "/u/" + post.name + "/" + post.time.day + "/" + post.title %>>
+      <h4 class="comment-label">评论</h4>
+      <div class="form-group">
+        <textarea name="content" name="content" class="form-control" cols="30" rows="10"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="name"> 您的大名
+          <input type="text" id="name" name="name" class="form-control">
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="email"> 电子邮箱
+          <input type="text" id="email" name="email" class="form-control">
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="website"> 个人网站
+          <input type="text" id="website" name="website" class="form-control">
+        </label>
+      </div>
+      <div class="form-group">
+        <input type="submit" value="提交评论" class="btn btn-primary" >
+      </div>
+    </form>
+</div>

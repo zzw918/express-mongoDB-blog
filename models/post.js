@@ -117,7 +117,7 @@ Post.getTenIndex = function (name, page, callback) {
 };
 
 // 获取用户页的10篇文章
-Post.getTenIndex = function (name, page, callback) {
+Post.getTen = function (name, page, callback) {
   mongodb.open(function (err, db) {
     if (err) {
       return callback(err.toString());

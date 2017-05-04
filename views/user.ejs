@@ -1,7 +1,11 @@
 <% include header.ejs %>
 <h2 class="text-center user-title"><a href=<%= "/u/" + title %>><%= title + "的博客"%></a></h2>
-<div class="text-center">
- 请上传头像: <input type="file" name="user-image" style="display: inline;" value="上传头像">
-</div>
+<% if (user.name == title) {%>
+  <div class="text-center">
+   现在上传头像吧~
+   <input type="file" name="user-image" style="display: inline;" value="上传头像">
+  </div>
+<% } %>
+
 <% include content %>
 <% include footer.ejs %>

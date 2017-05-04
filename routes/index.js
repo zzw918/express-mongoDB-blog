@@ -2,14 +2,15 @@ var express = require("express");
 // 引入crypto是为了在保存用户密码的时候能够加密。使用md5的方式。
 var crypto = require("crypto");
 var User = require('../models/user'),
-    Post = require('../models/post');
+    Post = require('../models/post'),
+    Comment = require('../models/comment');
 var checkLogin = require('../middlewares/check').checkLogin;
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 var router = express.Router();
 
-// 引入moulter中间件，用于上传用户头像文件
-// var multer = require('multer');
-// var uploat = multer({dest: './pubic/imgages/'});
+//引入moulter中间件，用于上传用户头像文件
+var multer = require('multer');
+var upload = multer({dest: './pubic/images/'});
 
 module.exports = router;
 
@@ -218,21 +219,27 @@ router.get('/u/:name/:day/:title', function (req, res) {
 });
 
 
-
-// 添加评论路由
-// 用户也可以是没有登陆的，那么评论时就需要添加额外的信息
-//action=<%= "/comment/" + post.name + "/" + post.time.day + "/" + post.title %>>
+// 留言psot
+// 一个留言对象需要存储留言内容、姓名、电子邮件、留言人的个人网址、留言的时间
 router.post('/u/:name/:day/:title', function (req, res) {
-  var url = encodeURI("/u/" + req.params.name + "/" + req.params.day + "/" + req.params.title);
-  Post.addComment(req.params.name, req.params.day, req.params.title, req.body.myComment, function (err) {
+  var date = new Date();
+  var time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDay() + " " + date.getHours() + ":" + ((date.getMinutes() < 10) ? ("0" + date.getMinutes()) : date.getMinutes());
+  var comment = {
+    content: req.body.content,
+    name: req.body.name,
+    email: req.body.email,
+    website: req.body.website,
+    time: time
+  };
+  var newComment = new Comment(req.params.name, req.params.day, req.params.title, comment);
+  newComment.save(function (err) {
     if (err) {
-      req.flash('error', err);
-      console.log("出错");
+      req.flash('error', err.toString());
       return res.redirect('/');
     }
-    console.log("成功");
-    res.redirect(url);
+    res.redirect('back');
   });
+
 });
 
 // 编辑页路由get

@@ -11,6 +11,9 @@ a:hover {
   font-weight: bold;
   text-decoration: none!important;
 }
+body {
+  background: #333!important;
+}
 /* 选中后的颜色 */
 ::selection {
   color: red;
@@ -21,6 +24,9 @@ a:hover {
 .nav {
   margin-top: 50px;
   font-size: 20px;
+}
+.nav .left {
+  color: #337ab7;
 }
 h2.title {
   text-shadow: 0 0 5px green;
@@ -60,9 +66,9 @@ div.footer {
 
 
 /* index */
-.panel {
-  margin-top: 50px!important;
-}
+// .panel {
+//   margin-top: 50px!important;
+// }
 .post-wrap {
   width: 76%;
   margin: 0 auto;
@@ -119,6 +125,17 @@ img.titlebg {
 }
 .article-title-name {
   color: white;
+}
+
+/* comment */
+.comment-item .panel-heading {
+  font-size: 15px;
+}
+.comment-item {
+  margin-bottom: 35px!important;
+}
+.comment-footer {
+  padding-left: 15px;
 }
 
 /* register */
