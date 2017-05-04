@@ -22,7 +22,7 @@ body {
 
 /* header */
 .nav {
-  margin-top: 50px;
+  margin-top: 35px;
   font-size: 20px;
 }
 .nav .left {
@@ -107,6 +107,10 @@ span.pv {
 .no-article-img {
   border-radius: 50%;
   margin-top: 50px;
+}
+
+.no-article {
+  color: #337ab7;
 }
 
 img.titlebg {

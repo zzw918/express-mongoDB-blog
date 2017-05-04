@@ -1,7 +1,2 @@
-var mongodb = require('./db');
-
-function Collection() {
-  this.name = name;
-  this.title = title;
-  this.post = this.post; 
-}
+// 对比其他几个model文件，形式基本一致！
+// 思路：先在路由中获取到文章，然后在将该文章的所有信息、收藏人的信息新建为收藏，那么评论呢？ 也要收藏吗

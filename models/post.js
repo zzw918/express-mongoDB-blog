@@ -16,6 +16,7 @@ function Post(name, head, title, tags, post, ifIndex) {
 
 module.exports = Post;
 
+// 这里需要使用this，所以才用prototype的。
 // 存储一篇文章及相关信息
 Post.prototype.save = function (callback) {
   var date = new Date();
@@ -89,13 +90,15 @@ Post.getTenIndex = function (name, page, callback) {
         mongodb.close();
         return callback(err.toString());
       }
-      collection.count({ifIndex: "on"}, function (err, total) {
+      collection.count({"ifIndex": "on"}, function (err, total) {
+      // collection.count({}, function (err, total) {
             if (err) {
               mongodb.close();
               return callback(err.toString());
             }
             collection.find({
-              name: "朱振伟"
+              // 这里只抓取发表到首页的文章，而不选择不发表到首页的文章
+              ifIndex: "on"
             }, {
               skip: (page - 1) * 10,
               limit: 10
@@ -222,7 +225,8 @@ Post.modify = function (editedPost, callback) {
         "time.day": editedPost.day
       }, {
         $set: {
-          post: editedPost.post
+          post: editedPost.post,
+          ifIndex: editedPost.ifIndex
         },
         $unset: {
           "tags": 1
@@ -415,3 +419,5 @@ Post.notRecommend = function (name, day, title, callback) {
     });
   });
 }
+
+

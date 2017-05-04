@@ -22,8 +22,6 @@ router.get('/', function (req, res) {
   // 查询并返回page页的十篇文章
   Post.getTenIndex(null, page, function (err, posts, total) {
     if (err) {
-      // flash('error', err);
-      // 显然这里不能在flash了，flash伴随着重定向啊，本来就在首页了，还能定向到哪里去呢？？　
       post = [];
       console.log(err);
     }
@@ -272,6 +270,7 @@ router.post('/edit/:name/:day/:title', checkLogin ,function (req, res) {
     day: req.params.day,
     title: req.params.title,
     post: req.body.post,
+    ifIndex: req.body.ifIndex,
     tag1: req.body.tag1||"",
     tag2: req.body.tag2||"",
     tag3: req.body.tag3||""
@@ -343,3 +342,7 @@ router.get('/notRecommend/:name/:day/:title',function (req, res) {
     res.redirect("/");
   });
 });
+
+
+// 收藏路由需要重新建立一个数据库集合， 每次点击收藏，即把该文章的原本的所有信息和收藏该文章的的人存储为一个一个的文档，
+// 然后到点击我的收藏的时候，就从中像取posts一样来取得文章

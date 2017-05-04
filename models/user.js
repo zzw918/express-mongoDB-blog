@@ -24,7 +24,8 @@ User.prototype.save = function (callback) {
     name: this.name,
     password:this.password,
     email: this.email,
-    head: head
+    head: head,
+    collections: []
   };
 
   // 打开数据库
